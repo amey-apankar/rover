@@ -6,7 +6,7 @@ Navigating complex desert environments poses a unique challenge for Unmanned Gro
 
 ## The Solution: Project Rover
 
-Rover is a high-performance semantic segmentation system developed for the Duality AI Offroad Autonomy Challenge. It uses high-fidelity synthetic data sourced from the Falcon digital twin platform to train a specialized model designed to detect and outline off-road hazards with pixel-level accuracy. The primary objective is to enhance UGV path planning by providing fine-grained scene understanding, so the vehicle can distinguish between safe terrain and critical obstacles in real time.
+Rover is a high-performance semantic segmentation system. It uses high fidelity synthetic data sourced from the Falcon digital twin platform to train a specialized model designed to detect and outline off-road hazards with pixel-level accuracy. The primary objective is to enhance UGV path planning by providing fine-grained scene understanding, so the vehicle can distinguish between safe terrain and critical obstacles in real time.
 
 
 ---
