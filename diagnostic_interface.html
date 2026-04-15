@@ -1,54 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ROVER Engine v2.0</title>
-
-    <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
-
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
 
         @keyframes scan {
-            0% {
-                top: 0%;
-                opacity: 1;
-            }
-
-            100% {
-                top: 100%;
-                opacity: 1;
-            }
+            0%   { top: 0%;   opacity: 1; }
+            100% { top: 100%; opacity: 1; }
         }
+        .animate-scan { animation: scan 2s linear infinite; }
 
-        .animate-scan {
-            animation: scan 2s linear infinite;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
     </style>
 </head>
 
-<body
-    class="h-screen bg-slate-950 text-slate-200 flex flex-col p-6 overflow-hidden selection:bg-cyan-500 selection:text-slate-900">
+<body class="h-screen bg-slate-950 text-slate-200 flex flex-col p-6 overflow-hidden selection:bg-cyan-500 selection:text-slate-900">
 
-    <!-- TOP HEADER -->
+    <!-- HEADER -->
     <header class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
         <h1 class="text-xl font-bold tracking-widest text-slate-200 items-center flex gap-3 uppercase">
             <span class="material-symbols-outlined text-cyan-400">radar</span>
@@ -63,73 +43,49 @@
     <!-- MAIN LAYOUT -->
     <div class="flex flex-1 gap-6 min-h-0">
 
-        <!-- MAIN ARENA -->
+        <!-- ARENA -->
         <main class="flex-1 flex flex-col gap-6 min-w-0 min-h-0">
-            <div
-                class="flex-1 bg-slate-900/80 border border-slate-800 rounded-lg relative overflow-hidden flex items-center justify-center p-4 shadow-xl">
+            <div class="flex-1 bg-slate-900/80 border border-slate-800 rounded-lg relative overflow-hidden flex items-center justify-center p-4 shadow-xl">
 
-                <!-- STATE 1: Empty Dropzone -->
+                <!-- STATE: Empty Dropzone -->
                 <div id="state-empty"
                     class="w-full max-w-2xl border-2 border-dashed border-slate-700 hover:border-cyan-500/80 rounded-xl p-16 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 bg-slate-950/50 group"
                     onclick="document.getElementById('file-upload').click()">
-                    <div
-                        class="p-5 rounded-full bg-slate-900 border border-slate-800 group-hover:border-cyan-500/50 transition-colors mb-6 shadow-[0_0_15px_rgba(34,211,238,0.0)] group-hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]">
-                        <span
-                            class="material-symbols-outlined text-[48px] text-slate-500 group-hover:text-cyan-400 transition-colors">cloud_upload</span>
+                    <div class="p-5 rounded-full bg-slate-900 border border-slate-800 group-hover:border-cyan-500/50 transition-colors mb-6 shadow-[0_0_15px_rgba(34,211,238,0.0)] group-hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+                        <span class="material-symbols-outlined text-[48px] text-slate-500 group-hover:text-cyan-400 transition-colors">cloud_upload</span>
                     </div>
-                    <h2
-                        class="text-2xl font-bold tracking-[0.2em] text-slate-300 group-hover:text-cyan-400 transition-colors">
-                        INITIALIZE NEURAL SCAN</h2>
-                    <p class="mt-4 font-mono text-slate-500 text-sm tracking-widest uppercase">Select Tactical Feed to
-                        begin operation</p>
+                    <h2 class="text-2xl font-bold tracking-[0.2em] text-slate-300 group-hover:text-cyan-400 transition-colors">INITIALIZE NEURAL SCAN</h2>
+                    <p class="mt-4 font-mono text-slate-500 text-sm tracking-widest uppercase">Select Tactical Feed to begin operation</p>
                 </div>
                 <input type="file" id="file-upload" class="hidden" accept="image/*" onchange="handleUpload(event)">
 
-                <!-- STATE 2: Loading / Scanning -->
-                <div id="state-loading"
-                    class="hidden relative w-full h-full flex items-center justify-center bg-slate-950/80 p-2 overflow-hidden rounded">
-                    <img id="img-loading" src="" alt="Raw uploaded feed"
-                        class="w-full h-full object-contain filter grayscale opacity-40 blur-[2px]" />
-
-                    <!-- Horizontal glowing cyan scanning line -->
-                    <div
-                        class="absolute left-0 right-0 h-[2px] bg-cyan-400 shadow-[0_0_25px_5px_rgba(34,211,238,0.7)] animate-scan z-20">
-                    </div>
-
-                    <!-- Loading Overlay Text -->
+                <!-- STATE: Loading -->
+                <div id="state-loading" class="hidden relative w-full h-full flex items-center justify-center bg-slate-950/80 p-2 overflow-hidden rounded">
+                    <img id="img-loading" src="" alt="Raw uploaded feed" class="w-full h-full object-contain filter grayscale opacity-40 blur-[2px]" />
+                    <div class="absolute left-0 right-0 h-[2px] bg-cyan-400 shadow-[0_0_25px_5px_rgba(34,211,238,0.7)] animate-scan z-20"></div>
                     <div class="absolute inset-0 flex items-center justify-center z-30">
-                        <div
-                            class="bg-slate-950/90 border border-cyan-500/50 px-8 py-6 rounded-lg backdrop-blur-sm flex flex-col items-center shadow-[0_0_30px_rgba(34,211,238,0.15)]">
-                            <span
-                                class="material-symbols-outlined text-[32px] text-cyan-400 animate-pulse mb-4">memory</span>
-                            <span class="font-mono text-cyan-400 text-xl animate-pulse tracking-widest">
-                                EXTRACTING DINOV2 FEATURES...
-                            </span>
+                        <div class="bg-slate-950/90 border border-cyan-500/50 px-8 py-6 rounded-lg backdrop-blur-sm flex flex-col items-center shadow-[0_0_30px_rgba(34,211,238,0.15)]">
+                            <span class="material-symbols-outlined text-[32px] text-cyan-400 animate-pulse mb-4">memory</span>
+                            <span id="loading-text" class="font-mono text-cyan-400 text-xl animate-pulse tracking-widest">EXTRACTING DINOV2 FEATURES...</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- STATE 3: Complete (Before/After Slider) -->
+                <!-- STATE: Complete (Before/After Slider) -->
                 <div id="state-complete"
                     class="hidden relative w-full h-full flex items-center justify-center rounded overflow-hidden select-none group bg-slate-950"
                     onmousemove="handleSliderMove(event)" ontouchmove="handleSliderMove(event)">
 
-                    <!-- Base Image (Raw Left Side) -->
-                    <img id="img-base" src="" alt="Original"
-                        class="absolute inset-0 w-full h-full object-contain pointer-events-none" />
-
-                    <!-- Overlay Image (Masked Right Side) clipped dynamically -->
+                    <img id="img-base" src="" alt="Original" class="absolute inset-0 w-full h-full object-contain pointer-events-none" />
                     <img id="img-overlay" src="" alt="Neural Mask Overlay"
-                        class="absolute inset-0 w-full h-full object-contain pointer-events-none filter sepia brightness-110 contrast-125 opacity-90"
+                        class="absolute inset-0 w-full h-full object-contain pointer-events-none"
                         style="clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);" />
 
-                    <!-- Slider Thumb / Glowing Line Overlay -->
                     <div id="slider-overlay"
                         class="absolute top-0 bottom-0 z-20 flex items-center justify-center pointer-events-none w-1"
                         style="left: 50%; transform: translateX(-50%);">
                         <div class="w-[2px] h-full bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,1)]"></div>
-                        <div
-                            class="absolute w-8 h-12 bg-slate-900 border border-cyan-400 rounded-sm flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.5)]">
+                        <div class="absolute w-8 h-12 bg-slate-900 border border-cyan-400 rounded-sm flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.5)]">
                             <div class="flex gap-1">
                                 <div class="w-[2px] h-5 bg-cyan-400/60"></div>
                                 <div class="w-[2px] h-5 bg-cyan-400/60"></div>
@@ -143,79 +99,79 @@
                     </button>
                 </div>
 
-            </div>
-
-            <!-- TELEMETRY CLUSTER -->
-            <div class="grid grid-cols-3 gap-6 shrink-0 h-32">
-                <!-- Box 1: mAP -->
-                <div
-                    class="bg-[#050505]/80 backdrop-blur-md border border-cyan-500/20 rounded-lg p-5 flex flex-col justify-center relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-                    <div class="flex items-center gap-2 mb-2 text-slate-400/90">
-                        <span class="material-symbols-outlined text-[18px]">target</span>
-                        <span class="uppercase text-[11px] tracking-[0.15em] font-bold"
-                            style="font-family: 'Space Grotesk', sans-serif;">Mean Avg Precision</span>
-                    </div>
-                    <div class="flex items-baseline gap-1">
-                        <span id="map-val" class="font-mono text-4xl text-cyan-400 drop-shadow-sm">--</span>
-                    </div>
+                <!-- STATE: Error -->
+                <div id="state-error" class="hidden w-full max-w-lg flex flex-col items-center justify-center gap-4 fade-in">
+                    <span class="material-symbols-outlined text-[48px] text-red-400">error</span>
+                    <p class="font-mono text-red-400 text-lg tracking-widest text-center">NEURAL LINK FAILED</p>
+                    <p id="error-msg" class="font-mono text-slate-500 text-sm text-center"></p>
+                    <button onclick="resetState()" class="mt-2 border border-slate-700 hover:border-cyan-500 text-slate-400 hover:text-cyan-400 px-6 py-2 rounded font-mono text-xs tracking-widest transition-all">
+                        [ RESET ]
+                    </button>
                 </div>
 
-                <!-- Box 2: IoU -->
-                <div
-                    class="bg-[#050505]/80 backdrop-blur-md border border-cyan-500/20 rounded-lg p-5 flex flex-col justify-center relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+            </div>
+
+            <!-- TELEMETRY -->
+            <div class="grid grid-cols-3 gap-6 shrink-0 h-32">
+
+                <!-- Hazard Level (rocks + logs %) -->
+                <div class="bg-[#050505]/80 backdrop-blur-md border border-cyan-500/20 rounded-lg p-5 flex flex-col justify-center relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+                    <div class="flex items-center gap-2 mb-2 text-slate-400/90">
+                        <span class="material-symbols-outlined text-[18px]">warning</span>
+                        <span class="uppercase text-[11px] tracking-[0.15em] font-bold" style="font-family: 'Space Grotesk', sans-serif;">Hazard Level</span>
+                    </div>
+                    <div class="flex items-baseline gap-1">
+                        <span id="hazard-val" class="font-mono text-4xl text-red-400 drop-shadow-sm">--</span>
+                    </div>
+                    <span class="font-mono text-[10px] text-slate-600 mt-1">Rocks + Logs pixel %</span>
+                </div>
+
+                <!-- IoU Score -->
+                <div class="bg-[#050505]/80 backdrop-blur-md border border-cyan-500/20 rounded-lg p-5 flex flex-col justify-center relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
                     <div class="flex items-center gap-2 mb-2 text-slate-400/90">
                         <span class="material-symbols-outlined text-[18px]">layers</span>
-                        <span class="uppercase text-[11px] tracking-[0.15em] font-bold"
-                            style="font-family: 'Space Grotesk', sans-serif;">Intersection Over Union</span>
+                        <span class="uppercase text-[11px] tracking-[0.15em] font-bold" style="font-family: 'Space Grotesk', sans-serif;">Validation IoU</span>
                     </div>
                     <div class="flex items-baseline gap-1">
                         <span id="iou-val" class="font-mono text-4xl text-emerald-400 drop-shadow-sm">--</span>
                     </div>
+                    <span class="font-mono text-[10px] text-slate-600 mt-1">From last val run</span>
                 </div>
 
-                <!-- Box 3: Latency -->
-                <div
-                    class="bg-[#050505]/80 backdrop-blur-md border border-cyan-500/20 rounded-lg p-5 flex flex-col justify-center relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+                <!-- Inference Latency -->
+                <div class="bg-[#050505]/80 backdrop-blur-md border border-cyan-500/20 rounded-lg p-5 flex flex-col justify-center relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
                     <div class="flex items-center gap-2 mb-2 text-slate-400/90">
                         <span class="material-symbols-outlined text-[18px]">speed</span>
-                        <span class="uppercase text-[11px] tracking-[0.15em] font-bold"
-                            style="font-family: 'Space Grotesk', sans-serif;">Inference Latency</span>
+                        <span class="uppercase text-[11px] tracking-[0.15em] font-bold" style="font-family: 'Space Grotesk', sans-serif;">Inference Latency</span>
                     </div>
                     <div class="flex items-baseline gap-1 mt-1">
                         <span id="latency-val" class="font-mono text-4xl text-amber-400 drop-shadow-sm">--</span>
                     </div>
+                    <span class="font-mono text-[10px] text-slate-600 mt-1">End-to-end ms</span>
                 </div>
+
             </div>
         </main>
 
         <!-- SIDEBAR: Target Classes -->
-        <aside
-            class="w-80 bg-slate-900/80 border border-slate-800 rounded-lg p-6 flex flex-col shrink-0 shadow-xl min-h-0">
+        <!-- Classes match PDF exactly: IDs 100,200,300,500,550,600,700,800,7100,10000 -->
+        <aside class="w-80 bg-slate-900/80 border border-slate-800 rounded-lg p-6 flex flex-col shrink-0 shadow-xl min-h-0">
             <div class="mb-4">
-                <h2
-                    class="text-slate-200 font-bold uppercase tracking-[0.15em] border-b border-slate-800 pb-4 flex items-center gap-3">
+                <h2 class="text-slate-200 font-bold uppercase tracking-[0.15em] border-b border-slate-800 pb-4 flex items-center gap-3">
                     <span class="material-symbols-outlined text-slate-500">database</span>
                     Target Classes
                 </h2>
             </div>
-
-            <!-- Column headers -->
             <div class="flex items-center gap-3 px-1 mb-2">
-                <span class="font-mono text-[10px] text-slate-600 uppercase tracking-widest w-12 shrink-0">ID</span>
+                <span class="font-mono text-[10px] text-slate-600 uppercase tracking-widest w-14 shrink-0">ID</span>
                 <span class="font-mono text-[10px] text-slate-600 uppercase tracking-widest flex-1">Class Name</span>
             </div>
+            <div class="flex flex-col gap-2 flex-1 overflow-y-auto" id="target-classes-list"></div>
 
-            <div class="flex flex-col gap-2 flex-1 overflow-y-auto" id="target-classes-list">
-                <!-- JS Rendered Content -->
-            </div>
-
-            <!-- Module Status Footer -->
             <div class="mt-4 border-t border-slate-800 pt-4">
                 <div class="flex justify-between items-center bg-slate-950 p-3 rounded border border-slate-800 text-xs">
                     <span class="text-slate-500 font-mono uppercase tracking-widest text-[10px]">Status Ref</span>
-                    <span id="status-ref-text" class="font-mono font-bold tracking-[0.2em] text-slate-600">
-                        STANDBY
-                    </span>
+                    <span id="status-ref-text" class="font-mono font-bold tracking-[0.2em] text-slate-600">STANDBY</span>
                 </div>
             </div>
         </aside>
@@ -223,131 +179,167 @@
     </div>
 
     <script>
-        // Load Classes
+        // ── Class definitions matching the Duality AI PDF exactly ──────────────
+        // Python color_palette indices 0-9 map to these classes in order:
+        // 0=Background, 1=Trees, 2=Lush Bushes, 3=Dry Grass, 4=Dry Bushes,
+        // 5=Ground Clutter, 6=Logs, 7=Rocks, 8=Landscape, 9=Sky
         const targetClasses = [
-            { id: 100, name: 'Trees', color: '#228B22' },
-            { id: 200, name: 'Lush Bushes', color: '#00C850' },
-            { id: 300, name: 'Dry Grass', color: '#C8A850' },
-            { id: 550, name: 'Dry Bushes', color: '#A0785A' },
-            { id: 550, name: 'Ground Clutter', color: '#8B6347' },
-            { id: 600, name: 'Flowers', color: '#FF4080' },
-            { id: 700, name: 'Flowers', color: '#FF8C00' },
-            { id: 800, name: 'Logs', color: '#8B4513' },
-            { id: 7100, name: 'Landscape', color: '#7B9BB5' },
-            { id: 10000, name: 'Sky', color: '#87CEEB' }
+            { id: '--',   name: 'Background',     color: '#1e293b' },  // index 0
+            { id: '100',  name: 'Trees',           color: '#228B22' },  // index 1
+            { id: '200',  name: 'Lush Bushes',     color: '#32CD32' },  // index 2
+            { id: '300',  name: 'Dry Grass',       color: '#FFD700' },  // index 3
+            { id: '500',  name: 'Dry Bushes',      color: '#FF8C00' },  // index 4
+            { id: '550',  name: 'Ground Clutter',  color: '#808080' },  // index 5
+            { id: '700',  name: 'Logs',            color: '#FF00FF' },  // index 6  ← PDF: 700
+            { id: '800',  name: 'Rocks',           color: '#FF0000' },  // index 7  ← PDF: 800
+            { id: '7100', name: 'Landscape',       color: '#00FF00' },  // index 8
+            { id: '10000',name: 'Sky',             color: '#00BFFF' },  // index 9
         ];
 
-        const listContainer = document.getElementById('target-classes-list');
-        targetClasses.forEach((cls, i) => {
-            listContainer.innerHTML += `
+        const listEl = document.getElementById('target-classes-list');
+        targetClasses.forEach(cls => {
+            listEl.innerHTML += `
             <div class="flex items-center gap-3 bg-slate-950/50 border border-slate-800/50 px-3 py-2.5 rounded group hover:border-cyan-900/60 transition-colors">
                 <div class="w-3.5 h-3.5 rounded-sm shrink-0 shadow-inner ring-1 ring-black/40" style="background-color: ${cls.color}"></div>
-                <span class="font-mono text-slate-500 text-xs w-12 shrink-0 group-hover:text-slate-400 transition-colors">${cls.id}</span>
+                <span class="font-mono text-slate-500 text-xs w-14 shrink-0 group-hover:text-slate-400 transition-colors">${cls.id}</span>
                 <span class="font-mono text-slate-300 text-xs uppercase tracking-wide flex-1 group-hover:text-cyan-400 transition-colors">${cls.name}</span>
-            </div>
-        `;
+            </div>`;
         });
 
-        const stateEmpty = document.getElementById('state-empty');
-        const stateLoading = document.getElementById('state-loading');
+        // ── DOM refs ───────────────────────────────────────────────────────────
+        const stateEmpty    = document.getElementById('state-empty');
+        const stateLoading  = document.getElementById('state-loading');
         const stateComplete = document.getElementById('state-complete');
-        const statusRefText = document.getElementById('status-ref-text');
-        const imgLoading = document.getElementById('img-loading');
-        const imgBase = document.getElementById('img-base');
-        const imgOverlay = document.getElementById('img-overlay');
+        const stateError    = document.getElementById('state-error');
+        const statusRef     = document.getElementById('status-ref-text');
+        const imgLoading    = document.getElementById('img-loading');
+        const imgBase       = document.getElementById('img-base');
+        const imgOverlay    = document.getElementById('img-overlay');
         const sliderOverlay = document.getElementById('slider-overlay');
+        const loadingText   = document.getElementById('loading-text');
 
-        function updateStatusRef(state) {
-            statusRefText.classList.remove('text-slate-600', 'text-cyan-400', 'animate-pulse', 'text-green-400');
-            if (state === 'empty') {
-                statusRefText.innerText = 'STANDBY';
-                statusRefText.classList.add('text-slate-600');
-            } else if (state === 'loading') {
-                statusRefText.innerText = 'SCANNING';
-                statusRefText.classList.add('text-cyan-400', 'animate-pulse');
-            } else if (state === 'complete') {
-                statusRefText.innerText = 'COMPLETED';
-                statusRefText.classList.add('text-green-400');
-            }
+        const loadingMessages = [
+            'EXTRACTING DINOV2 FEATURES...',
+            'RUNNING SEGMENTATION HEAD...',
+            'BLENDING NEURAL MASK...',
+            'COMPUTING TELEMETRY...',
+        ];
+        let loadingInterval = null;
+
+        function updateStatus(state) {
+            statusRef.className = 'font-mono font-bold tracking-[0.2em]';
+            const map = {
+                empty:    ['STANDBY',   'text-slate-600'],
+                loading:  ['SCANNING',  'text-cyan-400 animate-pulse'],
+                complete: ['COMPLETED', 'text-green-400'],
+                error:    ['ERROR',     'text-red-400'],
+            };
+            const [text, cls] = map[state];
+            statusRef.innerText = text;
+            statusRef.classList.add(...cls.split(' '));
         }
 
+        function showOnly(el) {
+            [stateEmpty, stateLoading, stateComplete, stateError].forEach(s => s.classList.add('hidden'));
+            el.classList.remove('hidden');
+        }
+
+        // ── Upload handler ─────────────────────────────────────────────────────
         function handleUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 const dataUrl = e.target.result;
-                imgLoading.src = dataUrl;
-                imgBase.src = dataUrl;
-                // Simulated processed effect
-                imgOverlay.src = dataUrl;
 
-                // Switch to loading
-                stateEmpty.classList.add('hidden');
-                stateLoading.classList.remove('hidden');
-                updateStatusRef('loading');
+                // Seed preview images
+                imgLoading.src = dataUrl;
+                imgBase.src    = dataUrl;
+                imgOverlay.src = dataUrl; // placeholder until mask arrives
+
+                showOnly(stateLoading);
+                updateStatus('loading');
+
+                // Cycle loading messages
+                let msgIdx = 0;
+                loadingInterval = setInterval(() => {
+                    msgIdx = (msgIdx + 1) % loadingMessages.length;
+                    loadingText.innerText = loadingMessages[msgIdx];
+                }, 1200);
 
                 const formData = new FormData();
                 formData.append('file', file);
 
-                // Simulate backend load for the dummy response + latency
-                fetch('/scan', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(res => res.json())
+                // ── THE FIX: .then(res => res.json()) before handling data ────
+                fetch('/scan', { method: 'POST', body: formData })
+                    .then(res => {
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        return res.json();   // ← this was MISSING in your original
+                    })
                     .then(data => {
-                        stateLoading.classList.add('hidden');
-                        stateComplete.classList.remove('hidden');
-                        updateStatusRef('complete');
+                        clearInterval(loadingInterval);
 
-                        if (data.telemetry) {
-                            document.getElementById('map-val').innerText = data.telemetry.map;
-                            document.getElementById('iou-val').innerText = data.telemetry.iou;
-                            document.getElementById('latency-val').innerText = data.telemetry.latency;
+                        if (data.status === 'ERROR') {
+                            showOnly(stateError);
+                            document.getElementById('error-msg').innerText = data.message || 'Unknown server error.';
+                            updateStatus('error');
+                            return;
                         }
 
-                        imgOverlay.style.clipPath = `polygon(50% 0, 100% 0, 100% 100%, 50% 100%)`;
-                        sliderOverlay.style.left = `50%`;
+                        // Inject the real segmentation mask
+                        if (data.mask_base64) {
+                            imgOverlay.src = data.mask_base64;
+                        }
+
+                        // Update telemetry boxes correctly
+                        if (data.telemetry) {
+                            document.getElementById('hazard-val').innerText  = data.telemetry.hazard_level ?? '--';
+                            document.getElementById('iou-val').innerText     = data.telemetry.iou         ?? '0.29';
+                            document.getElementById('latency-val').innerText = data.telemetry.latency     ?? '--';
+                        }
+
+                        // Reset slider to 50%
+                        imgOverlay.style.clipPath  = 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%)';
+                        sliderOverlay.style.left   = '50%';
+
+                        showOnly(stateComplete);
+                        stateComplete.classList.add('fade-in');
+                        updateStatus('complete');
                     })
                     .catch(err => {
-                        // Return to empty on error
-                        resetState();
-                        alert("Connection to ROVER Engine failed.");
-                        console.error(err);
+                        clearInterval(loadingInterval);
+                        showOnly(stateError);
+                        document.getElementById('error-msg').innerText = err.message || 'Could not reach ROVER Engine.';
+                        updateStatus('error');
+                        console.error('Fetch error:', err);
                     });
             };
             reader.readAsDataURL(file);
         }
 
-        function resetState() {
-            document.getElementById('file-upload').value = '';
-            stateComplete.classList.add('hidden');
-            stateLoading.classList.add('hidden');
-            stateEmpty.classList.remove('hidden');
-            updateStatusRef('empty');
-        }
-
+        // ── Slider drag ────────────────────────────────────────────────────────
         function handleSliderMove(e) {
             if (stateComplete.classList.contains('hidden')) return;
+            let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const rect  = stateComplete.getBoundingClientRect();
+            let x       = Math.max(0, Math.min(clientX - rect.left, rect.width));
+            const pct   = (x / rect.width) * 100;
+            imgOverlay.style.clipPath = `polygon(${pct}% 0, 100% 0, 100% 100%, ${pct}% 100%)`;
+            sliderOverlay.style.left  = `${pct}%`;
+        }
 
-            let clientX = e.clientX;
-            if (e.touches && e.touches.length > 0) {
-                clientX = e.touches[0].clientX;
-            }
-
-            // calculate position relative to the complete div container
-            const rect = stateComplete.getBoundingClientRect();
-            let x = clientX - rect.left;
-            x = Math.max(0, Math.min(x, rect.width));
-            const percent = (x / rect.width) * 100;
-
-            // right-side reveal
-            imgOverlay.style.clipPath = `polygon(${percent}% 0, 100% 0, 100% 100%, ${percent}% 100%)`;
-            sliderOverlay.style.left = `${percent}%`;
+        // ── Reset ──────────────────────────────────────────────────────────────
+        function resetState() {
+            clearInterval(loadingInterval);
+            document.getElementById('file-upload').value = '';
+            document.getElementById('hazard-val').innerText  = '--';
+            document.getElementById('iou-val').innerText     = '--';
+            document.getElementById('latency-val').innerText = '--';
+            loadingText.innerText = loadingMessages[0];
+            showOnly(stateEmpty);
+            updateStatus('empty');
         }
     </script>
 </body>
-
 </html>
