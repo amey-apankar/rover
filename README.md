@@ -97,7 +97,7 @@ This forces the model to pay significantly more attention to detecting rocks and
 ---
 
 
-## Why We Fine-Tuned After Initial Training
+## Why Fine Tuning was required after initial training
 
 The initial training run used the basic `train_segmentation.py` script with a simple weighted cross-entropy loss. While this produced a functional model, it had several problems:
 
